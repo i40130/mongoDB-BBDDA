@@ -3,28 +3,26 @@ db.createCollection("provincias", {
    validator: {
       $jsonSchema: {
          bsonType: "object",
-         required: ["idProvincia", "nombre"],
+         required: ["_id", "nombre"],
          properties: {
-            idProvincia: { bsonType: "int" },
+            _id: { bsonType: "objectId" },
             nombre: { bsonType: "string" },
             municipios: {
                bsonType: "array",
+               description: "lista de municipios incluidos en la provincia"
                items: {
                   bsonType: "object",
-                  required: ["idMunicipio", "nombre"],
+                  required: ["nombre"],
                   properties: {
-                     idMunicipio: { bsonType: "int" },
-                     nombre: { bsonType: "string" },
-                     localidades: {
+                    nombre: { bsonType: "string" },
+                    localidades: {
                         bsonType: "array",
+                        description: "lista de localidades incluidas en e; municipio",
                         items: {
-                           bsonType: "object",
-                           properties: {
-                              idLocalidad: { bsonType: "int" },
-                              nombre: { bsonType: "string" }
-                           }
+                            bsonType: "object",
+                            required: ["nombre"]
                         }
-                     }
+                    }
                   }
                }
             }
@@ -36,22 +34,18 @@ db.createCollection("estaciones", {
    validator: {
       $jsonSchema: {
          bsonType: "object",
-         required: ["idEstacion", "rotulo", "ubicacion", "esTerrestre"],
+         required: ["_id", "rotulo", "ubicacion", "esTerrestre"],
          properties: {
-            idEstacion: { bsonType: "int" },
+            _id: { bsonType: "objectId" },
             rotulo: {
-               bsonType: "object",
-               required: ["idRotulo", "nombre"],
-               properties: {
-                  idRotulo: { bsonType: "int" },
-                  nombre: { bsonType: "string" }
-               }
+               bsonType: "objectId",
+               description: "id del rotulo en la coleccion rotulos"
             },
             ubicacion: {
                bsonType: "object",
                required: ["provincia", "municipio", "localidad", "codigoPostal", "direccion"],
                properties: {
-                  provincia: { bsonType: "string" },
+                  provincia: { bsonType: "objectId" },
                   municipio: { bsonType: "string" },
                   localidad: { bsonType: "string" },
                   codigoPostal: { bsonType: "string" },
@@ -69,14 +63,14 @@ db.createCollection("estaciones", {
                   }
                }
             },
+            esTerrestre: {bsonType: "bool"}
             tarifas: {
                bsonType: "array",
                items: {
                   bsonType: "object",
-                  required: ["idCarburante", "precio", "fecha"],
+                  required: ["carburante", "precio", "fecha"],
                   properties: {
-                     idCarburante: { bsonType: "int" },
-                     nombreCarburante: { bsonType: "string" },
+                     carburante: { bsonType: "objectId" },
                      precio: { bsonType: "double" },
                      fecha: { bsonType: "date" }
                   }
@@ -90,9 +84,9 @@ db.createCollection("carburantes", {
    validator: {
       $jsonSchema: {
          bsonType: "object",
-         required: ["idCarburante", "nombre"],
+         required: ["_id", "nombre"],
          properties: {
-            idCarburante: { bsonType: "int" },
+            _id: { bsonType: "objectId" },
             nombre: { bsonType: "string" }
          }
       }
@@ -103,9 +97,9 @@ db.createCollection("rotulos", {
    validator: {
       $jsonSchema: {
          bsonType: "object",
-         required: ["idRotulo", "nombre"],
+         required: ["_id", "nombre"],
          properties: {
-            idRotulo: { bsonType: "int" },
+            _id: { bsonType: "objectId" },
             nombre: { bsonType: "string" }
          }
       }
@@ -113,18 +107,18 @@ db.createCollection("rotulos", {
 })
 // Índices para estaciones
 db.estaciones.createIndex({ "ubicacion.coordenadas": "2dsphere" })
-db.estaciones.createIndex({ "rotulo.idRotulo": 1 })
+db.estaciones.createIndex({ "rotulo": 1 })
 db.estaciones.createIndex({ "ubicacion.provincia": 1, "ubicacion.municipio": 1, "ubicacion.localidad": 1 }, { name: "idx_ubicacion" })
 db.estaciones.createIndex({ "esTerrestre": 1 })
+db.estaciones.createIndex({ "tarifas.carburante": 1 });
 
 // Índices para provincias
 db.provincias.createIndex({ "nombre": 1 })
-db.provincias.createIndex({ "municipios.nombre": 1 })
-db.provincias.createIndex({ "municipios.localidades.nombre": 1 })
+db.provincias.createIndex({ "municipios.nombre": 1 });
+db.provincias.createIndex({ "municipios.localidades.nombre": 1 });
+
+// Índices para carburantes
+db.carburantes.createIndex({ "nombre": 1 })
 
 // Índices para rótulos
 db.rotulos.createIndex({ "nombre": 1 })
-
-
-
-
