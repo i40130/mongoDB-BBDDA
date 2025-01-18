@@ -1,0 +1,149 @@
+use estacionesDB
+db.createCollection("provincias", {
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: ["_id", "nombre"],
+         properties: {
+            _id: { bsonType: "objectId" },
+            nombre: { bsonType: "string" },
+            municipios: {
+               bsonType: "array",
+               description: "lista de municipios incluidos en la provincia"
+               items: {
+                  bsonType: "objectId",
+                  description: "id del municipio en la coleccion de municipios"
+               }
+            }
+         }
+      }
+   }
+})
+db.createCollection("municipios", {
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: ["_id", "nombre"],
+         properties: {
+            _id: { bsonType: "objectId" },
+            nombre: { bsonType: "string" },
+            localidades: {
+               bsonType: "array",
+               description: "lista de localidades incluidas en el municipio"
+               items: {
+                  bsonType: "objectId",
+                  description: "id de la localidad en la coleccion de localidades"
+               }
+            }
+         }
+      }
+   }
+})
+db.createCollection("localidades", {
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: ["_id", "nombre"],
+         properties: {
+            _id: { bsonType: "objectId" },
+            nombre: { bsonType: "string" },
+         }
+      }
+   }
+})
+db.createCollection("estaciones", {
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: ["_id", "rotulo", "ubicacion", "esTerrestre"],
+         properties: {
+            _id: { bsonType: "objectId" },
+            rotulo: {
+               bsonType: "objectId",
+               description: "id del rotulo en la coleccion rotulos"
+            },
+            ubicacion: {
+               bsonType: "object",
+               required: ["provincia", "municipio", "localidad", "codigoPostal", "direccion"],
+               properties: {
+                  localidad: { bsonType: "objectId" },
+                  codigoPostal: { bsonType: "string" },
+                  direccion: { bsonType: "string" },
+                  coordenadas: {
+                     bsonType: "object",
+                     required: ["type", "coordinates"],
+                     properties: {
+                        type: { bsonType: "string" },
+                        coordinates: {
+                           bsonType: "array",
+                           items: { bsonType: "double" }
+                        }
+                     }
+                  }
+               }
+            },
+            esTerrestre: {bsonType: "bool"}
+            tarifas: {
+               bsonType: "array",
+               items: {
+                  bsonType: "object",
+                  required: ["idCarburante", "precio", "fecha"],
+                  properties: {
+                     idCarburante: { bsonType: "int" },
+                     nombreCarburante: { bsonType: "string" },
+                     precio: { bsonType: "double" },
+                     fecha: { bsonType: "date" }
+                  }
+               }
+            }
+         }
+      }
+   }
+})
+db.createCollection("carburantes", {
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: ["_id", "nombre"],
+         properties: {
+            _id: { bsonType: "objectId" },
+            nombre: { bsonType: "string" }
+         }
+      }
+   }
+})
+
+db.createCollection("rotulos", {
+   validator: {
+      $jsonSchema: {
+         bsonType: "object",
+         required: ["_id", "nombre"],
+         properties: {
+            _id: { bsonType: "objectId" },
+            nombre: { bsonType: "string" }
+         }
+      }
+   }
+})
+// Índices para estaciones
+db.estaciones.createIndex({ "ubicacion.coordenadas": "2dsphere" })
+db.estaciones.createIndex({ "rotulo._id": 1 })
+db.estaciones.createIndex({ "ubicacion.localidad": 1 })
+db.estaciones.createIndex({ "esTerrestre": 1 })
+
+// Índices para provincias
+db.provincias.createIndex({ "nombre": 1 })
+db.provincias.createIndex({ "municipios._id": 1 })
+
+// Índices para municipios
+db.municipios.createIndex({ "nombre": 1 })
+db.municipios.createIndex({ "localidades._id": 1 })
+
+// Índices para localidades
+db.localidades.createIndex({ "nombre": 1 })
+
+// Índices para carburantes
+db.carburantes.createIndex({ "nombre": 1 })
+
+// Índices para rótulos
+db.rotulos.createIndex({ "nombre": 1 })
