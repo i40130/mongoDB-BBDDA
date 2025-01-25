@@ -1,0 +1,90 @@
+{
+	"estaciones" : {
+	    "mappings": {
+	        "properties": {
+	            "idEstacion": {"type": "integer"},
+	            "idRotulo": {"type": "integer"},
+	            "codigoPostal": {"type": "text"},
+	            "direccion": {"type": "search_as_you_type"},
+	            "margen": {"type": "text"},
+	            "longitud": {"type": "double"},
+	            "latitud": {"type": "double"},
+	            "horario": {"type": "text"},
+	            "esTerrestre": {"type": "boolean"},
+	            "localidad": {
+	                "properties": {
+	                    "id": {"type": "integer"},
+	                    "nomLocalidad": {"type": "text"}
+	                }
+	            },
+	            "municipio": {
+	                "properties": {
+	                    "id": {"type": "integer"},
+	                    "nomMunicipio": {"type": "text"}
+	                }
+	            },
+	            "provincia": {
+	                "properties": {
+	                    "id": {"type": "integer"},
+	                    "nomProvincia": {"type": "text"}
+	                }
+	            },
+	            "tarifas": {
+	                "type": "nested",
+	                "properties": {
+	                    "carburante": {
+	                        "properties": {
+	                            "idCarburante": {"type": "integer"},
+	                            "nomCarburante": {"type": "text"}
+	                        }
+	                    },
+	                    "fecha": {"type": "date"},
+	                    "precio": {"type": "float"}
+	                }
+	            }
+	        }
+	    }
+	},
+	"provincias": {
+		"mappings": {
+			"properties": {
+				"idProvincia": {"type": "integer"},
+				"nomProvincia": {"type": "search_as_you_type"}
+			}
+		}
+	},
+	"municipios": {
+		"mappings": {
+			"properties": {
+				"idMunicipio": {"type": "integer"},
+				"idProvincia": {"type": "integer"},
+				"nomMunicipio": {"type": "search_as_you_type"}
+			}
+		}
+	},
+	"localidades": {
+		"mappings": {
+			"properties": {
+				"idMunicipio": {"type": "integer"},
+				"idLocalidad": {"type": "integer"},
+				"Localidad": {"type": "search_as_you_type"}
+			}
+		}
+	},	
+	"carburantes": {
+		"mappings": {
+			"properties": {
+				"idCarburante": {"type": "integer"},
+				"nomCarburante": {"type": "search_as_you_type"}
+			}
+		}
+	},
+	"rotulo": {
+		"mappings": {
+			"properties": {
+				"idRotulo": {"type": "integer"},
+				"nomRotulo": ""
+			}
+		}
+	}
+}

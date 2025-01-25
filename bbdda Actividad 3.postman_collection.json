@@ -1,0 +1,152 @@
+{
+	"info": {
+		"_postman_id": "3b2bfe3c-34cd-4e44-a12a-2c5dd078ad35",
+		"name": "bbdda Actividad 3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "16752958"
+	},
+	"item": [
+		{
+			"name": "Obtener todos los indices",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{elasticsearch-host}}/_cat/indices"
+			},
+			"response": []
+		},
+		{
+			"name": "Mapping",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{elasticsearch-host}}/estaciones/_mapping"
+			},
+			"response": []
+		},
+		{
+			"name": "Delete indice",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "{{elasticsearch-host}}/estaciones"
+			},
+			"response": []
+		},
+		{
+			"name": "estaciones",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mappings\": {\n        \"properties\": {\n            \"idEstacion\": {\"type\": \"integer\"},\n            \"idRotulo\": {\"type\": \"integer\"},\n            \"codigoPostal\": {\"type\": \"text\"},\n            \"direccion\": {\"type\": \"search_as_you_type\"},\n            \"margen\": {\"type\": \"text\"},\n            \"longitud\": {\"type\": \"double\"},\n            \"latitud\": {\"type\": \"double\"},\n            \"horario\": {\"type\": \"text\"},\n            \"esTerrestre\": {\"type\": \"boolean\"},\n            \"localidad\": {\n                \"properties\": {\n                    \"id\": {\"type\": \"integer\"},\n                    \"nomLocalidad\": {\"type\": \"text\"}\n                }\n            },\n            \"municipio\": {\n                \"properties\": {\n                    \"id\": {\"type\": \"integer\"},\n                    \"nomMunicipio\": {\"type\": \"text\"}\n                }\n            },\n            \"provincia\": {\n                \"properties\": {\n                    \"id\": {\"type\": \"integer\"},\n                    \"nomProvincia\": {\"type\": \"text\"}\n                }\n            },\n            \"tarifas\": {\n                \"type\": \"nested\",\n                \"properties\": {\n                    \"carburante\": {\n                        \"properties\": {\n                            \"idCarburante\": {\"type\": \"integer\"},\n                            \"nomCarburante\": {\"type\": \"text\"}\n                        }\n                    },\n                    \"fecha\": {\"type\": \"date\"},\n                    \"precio\": {\"type\": \"float\"}\n                }\n            }\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{elasticsearch-host}}/estaciones"
+			},
+			"response": []
+		},
+		{
+			"name": "rotulos",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mappings\": {\n        \"properties\": {\n            \"idRotulo\": {\"type\": \"integer\"},\n            \"nomRotulo\": {\"type\": \"search_as_you_type\"}\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{elasticsearch-host}}/rotulos"
+			},
+			"response": []
+		},
+		{
+			"name": "provincias",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mappings\": {\n        \"properties\": {\n            \"idProvincia\": {\"type\": \"integer\"},\n            \"nomProvincia\": {\"type\": \"search_as_you_type\"}\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{elasticsearch-host}}/provincias"
+			},
+			"response": []
+		},
+		{
+			"name": "municipios",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mappings\": {\n        \"properties\": {\n            \"idMunicipio\": {\"type\": \"integer\"},\n            \"idProvincia\": {\"type\": \"integer\"},\n            \"nomMunicipio\": {\"type\": \"search_as_you_type\"}\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{elasticsearch-host}}/municipios"
+			},
+			"response": []
+		},
+		{
+			"name": "localidades",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mappings\": {\n        \"properties\": {\n            \"idMunicipio\": {\"type\": \"integer\"},\n            \"idLocalidad\": {\"type\": \"integer\"},\n            \"Localidad\": {\"type\": \"search_as_you_type\"}\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{elasticsearch-host}}/localidades"
+			},
+			"response": []
+		},
+		{
+			"name": "carburantes",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"mappings\": {\n        \"properties\": {\n            \"idCarburante\": {\"type\": \"integer\"},\n            \"nomCarburante\": {\"type\": \"search_as_you_type\"}\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{elasticsearch-host}}/carburantes"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "elasticsearch-host",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
